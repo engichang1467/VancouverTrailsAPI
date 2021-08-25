@@ -18,7 +18,7 @@ pip install -r requirements.txt
 uvicorn app:app --reload
 ```
 
-- [Check it out here](localhost:8000/docs)
+- [Check it out here](https://localhost:8000/docs)
 
 ## References
 
