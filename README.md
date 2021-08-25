@@ -2,7 +2,7 @@
 
 A REST API that stores (almost) all the trails data in BC, and a recommendation algorithm that helps user to recommend trails to walk based on their locations.
 
-Technologies: Python, FastAPI, and SQLAlchemy
+Technologies: Python, FastAPI, MySQL and SQLAlchemy
 
 ## How to run it?
 
