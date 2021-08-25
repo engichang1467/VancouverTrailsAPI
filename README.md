@@ -12,11 +12,15 @@ Technologies: Python, FastAPI, MySQL and SQLAlchemy
 pip install -r requirements.txt
 ```
 
+- Set up a MySQL Database, and write the information into a `.env` file.
+
 - run API with this command
 
 ```bash
 uvicorn app:app --reload
 ```
+
+- Once the app is running, go to `data/dataSet.sql` to run the script to add all the data into the database.
 
 - [Check it out here](https://localhost:8000/docs)
 
