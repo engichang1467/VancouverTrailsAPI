@@ -8,12 +8,29 @@
 from random import randint
 from fastapi import APIRouter
 from model.trail import trails
-from database import *
-from schemas.trail import *
+from database import conn
 
+# Access the real dataset from the database
 dataSet = conn.execute(trails.select()).fetchall()
 
-# Get average rate of the 
+# Graph for neighbour regions
+regionGraph = {
+    "Pemberton": ["Whistler"],
+    "Whistler": ["Pemberton", "Howe Sound"],
+    "Howe Sound": ["Whistler", "Sunshine Coast", "The North Shore"],
+    "Sunshine Coast": ["Howe Sound"],
+    "The North Shore": ["Howe Sound", "Tri Cities", "Vancouver City"],
+    "Vancouver City": ["The North Shore", "Surrey and Langley", "Tsawwassen and Delta"],
+    "Fraser Valley East": ["Ridge Meadows", "Surrey and Langley", "Manning Provincial Park"],
+    "Tri Cities": ["The North Shore", "Surrey and Langley", "Ridge Meadows"],
+    "Tsawwassen and Delta": ["Vancouver City", "Surrey and Langley"],
+    "Surrey and Langley": ["Tri Cities", "Vancouver City", "Tsawwassen and Delta", "Fraser Valley East", "Ridge Meadows"],
+    "Ridge Meadows": ["Tri Cities", "Surrey and Langley", "Fraser Valley East"],
+    "Manning Provincial Park": ["Fraser Valley East"]
+}
+
+
+# Get average rate of the region
 def getAvgRate(region:str):
     totalTrail = 0
     totalRate = 0
@@ -24,21 +41,6 @@ def getAvgRate(region:str):
     
     return round(totalRate / totalTrail, 2)
 
-# Graph for neighbour regions
-regionGraph = {
-    "Pemberton":["Whistler"],
-    "Whistler":["Pemberton","Howe Sound"],
-    "Howe Sound":["Whistler","Sunshine Coast","The North Shore"],
-    "Sunshine Coast":["Howe Sound"],
-    "The North Shore":["Howe Sound","Tri Cities","Vancouver City"],
-    "Vancouver City":["The North Shore","Surrey and Langley","Tsawwassen and Delta"],
-    "Fraser Valley East":["Ridge Meadows","Surrey and Langley","Manning Provincial Park"],
-    "Tri Cities":["The North Shore","Surrey and Langley","Ridge Meadows"],
-    "Tsawwassen and Delta":["Vancouver City","Surrey and Langley"],
-    "Surrey and Langley":["Tri Cities","Vancouver City","Tsawwassen and Delta","Fraser Valley East","Ridge Meadows"],
-    "Ridge Meadows":["Tri Cities","Surrey and Langley","Fraser Valley East"],
-    "Manning Provincial Park":["Fraser Valley East"]
-}
 
 # Sort neighbours based on their average ratings
 def sortNeighbours(arr:list):
@@ -48,30 +50,25 @@ def sortNeighbours(arr:list):
     else:
         for i in range(n):
             for j in range(n-i-1):
-                if getAvgRate(arr[j]) < getAvgRate(arr[j+1]):
+                if (getAvgRate(arr[j]) < getAvgRate(arr[j+1])):
                     tmp = arr[j]
                     arr[j] = arr[j+1]
                     arr[j+1] = tmp
-        
     return arr
 
-# arr = regionGraph["Fraser Valley East"]
-
-# print(sortNeighbours(arr))
 
 # Get list of trails based on their region
-def getRegionList(region:str):
+def getRegionList(region: str):
     res = []
     for trail in dataSet:
-        if trail["region"] == region:
+        if (trail["region"] == region):
             res.append(trail)
     return res
 
-# print(getRegionList("Vancouver City"))
 
 # Get list of trails based on their region in decending order (based on their ratings)
-def sortRegionList(dataSet:list):
-    if len(dataSet) <= 1:
+def sortRegionList(dataSet: list):
+    if (len(dataSet) <= 1):
         return dataSet
 
     smaller = []
@@ -80,9 +77,9 @@ def sortRegionList(dataSet:list):
     pivot = dataSet[randint(0, len(dataSet)-1)]["rate"]
 
     for trail in dataSet:
-        if trail["rate"] < pivot:
+        if (trail["rate"] < pivot):
             smaller.append(trail)
-        elif trail["rate"] == pivot:
+        elif (trail["rate"] == pivot):
             equal.append(trail)
         else:
             larger.append(trail)
@@ -94,7 +91,7 @@ def sortRegionList(dataSet:list):
 
 
 # The Trail recommendation algorithm
-def trailRecommendation(region:str):
+def trailRecommendation(region: str):
     res = []
     tmpRegions = []
 
@@ -111,16 +108,8 @@ def trailRecommendation(region:str):
 
     # Add left over regions
     for region in regionGraph:
-        if region not in tmpRegions:
+        if (region not in tmpRegions):
             tmpRegions.append(region)
             res += sortRegionList(getRegionList(region))
 
     return res
-    
-# print(trailRecommendation("Vancouver City"))
-
-        
-
-
-
-
