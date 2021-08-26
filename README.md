@@ -14,6 +14,14 @@ pip install -r requirements.txt
 
 - Set up a MySQL Database, and write the information into a `.env` file.
 
+```.env
+mainDB=${mainDB}
+password=${DBpassword}
+DBName=${DBName}
+hostName=${hostName}
+portNum=${portNumber}
+```
+
 - run API with this command
 
 ```bash

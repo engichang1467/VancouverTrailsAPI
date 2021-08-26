@@ -3,6 +3,7 @@
     author: Michael Chang 
 
     This script will help add all the necessary data needed for this API
+    Reference: https://www.vancouvertrails.com/trails/
 */
 
 -- SELECT * FROM trail;
