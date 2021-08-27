@@ -2,6 +2,8 @@
 
 A REST API that stores (almost) all the trails data in BC, and a recommendation algorithm that helps user to recommend trails to walk based on their locations.
 
+For more information on how the recommendation algorithm works [click here](https://github.com/engichang1467/VancouverTrailRecommendation)
+
 Technologies: Python, FastAPI, MySQL and SQLAlchemy
 
 ## How to run it?
